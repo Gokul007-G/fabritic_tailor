@@ -1,3 +1,4 @@
+import 'package:fabritic/controller/storage/storage_controller.dart';
 import 'package:fabritic/model/measurement_model.dart';
 import 'package:fabritic/services/services.dart';
 import 'package:fabritic/services/tailor/view_measurement_services.dart';
@@ -12,6 +13,8 @@ class ViewMeasurementController extends GetxController {
   final services = Get.put(ViewMeasurementServices());
   final Services checkServices = Get.put(Services());
 
+  final StorageController storageController = Get.find<StorageController>();
+
   //variables
   final measurement = Measurement().obs;
   final isLoading = false.obs;
@@ -23,41 +26,112 @@ class ViewMeasurementController extends GetxController {
 
   //get measurements by JB Id
   Future<void> viewMeasurementCnt(BuildContext context, String jbNo) async {
-    final color = AppColors(context);
+    // final color = AppColors(context);
+    final empName = storageController.name.value;
     if (isLoading.value) return;
     isLoading.value = true;
     //Check server connection
     bool serverConnect = await checkServices.checkServer(context);
     if (serverConnect) {
-      final data = await services.viewMeasurementSrc(jbNo);
-      if (data != null) {
-        measurement.value = data;
-        processedImage(data);
-        Get.to(() => ViewMeasurementScreen());
-      } else {
+      try {
+        final data = await services.viewMeasurementSrc(empName, jbNo);
+        if (data != null) {
+          measurement.value = data;
+          processedImage(data);
+          Get.to(() => ViewMeasurementScreen());
+        }
+      } catch (e) {
         isLoading.value = false;
+        final errorMessage = e.toString().replaceFirst('Exception: ', '');
+
+        String title = 'Error';
+        String message = errorMessage;
+
+        if (errorMessage.contains('allocated')) {
+          title = 'Access Denied';
+          message = 'This job is not allocated to you.';
+        } else if (errorMessage.contains('completed')) {
+          title = 'Already Completed';
+          message =
+              'This QR code has already been completed. Please scan a valid one.';
+        } else if (errorMessage.contains('QR')) {
+          title = 'QR Code Not Found';
+          message = 'Please scan a valid QR code.';
+        }
         Get.defaultDialog(
-          title: 'QR Code Not Found',
-          titleStyle: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: color.error,
+          barrierDismissible: false,
+          title: '',
+          contentPadding: const EdgeInsets.all(20),
+          radius: 22,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // 🔴 Icon
+              Container(
+                padding: const EdgeInsets.all(18),
+                decoration: BoxDecoration(
+                  color: Colors.red.withOpacity(0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.error_outline_rounded,
+                  color: Colors.red,
+                  size: 48,
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              // 🔴 Title
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black87,
+                ),
+              ),
+
+              const SizedBox(height: 10),
+
+              // 🔴 Message
+              Text(
+                message,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 15,
+                  height: 1.4,
+                  color: Colors.grey.shade700,
+                ),
+              ),
+
+              const SizedBox(height: 24),
+
+              // ✅ Button
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Get.offAll(() => DashBoardScreen());
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                    elevation: 2,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                  ),
+                  child: const Text(
+                    'OK',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ),
+            ],
           ),
-          content: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-            child: Text(
-              'This QR code has already been completed. Please scan a valid one.',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16, color: Colors.black87),
-            ),
-          ),
-          textConfirm: 'OK',
-          confirmTextColor: color.white,
-          buttonColor: color.primary,
-          radius: 15,
-          onConfirm: () {
-            Get.offAll(() => DashBoardScreen());
-          },
           onWillPop: () async {
             Get.offAll(() => DashBoardScreen());
             return false;

@@ -6,18 +6,18 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 class Services {
   //localhost
-  // static const imageUrl = "http://10.0.2.2/SRSSilk/";
-  // static const baseUrl = "http://10.0.2.2/SRSSilk/mobile_services/";
+  static const imageUrl = "http://10.0.2.2/SRSSilk/";
+  static const baseUrl = "http://10.0.2.2/SRSSilk/mobile_services/";
 
   //Server
-  static const imageUrl = "http://demo.bluebase.in/tailoringsoftware/";
-  static const baseUrl =
-      "http://demo.bluebase.in/tailoringsoftware/mobile_services/";
+  // static const imageUrl = "https://software.bluebase.in/SRSSilk/";
+  // static const baseUrl =
+  //     "https://software.bluebase.in/SRSSilk/mobile_services/";
 
   final Dio dio = Dio(
     BaseOptions(
-      connectTimeout: Duration(seconds: 1),
-      receiveTimeout: Duration(seconds: 1),
+      connectTimeout: Duration(seconds: 5),
+      receiveTimeout: Duration(seconds: 5),
     ),
   );
 

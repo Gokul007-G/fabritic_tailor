@@ -39,6 +39,15 @@ class LoginController extends GetxController {
     selectedMethod.value = method;
   }
 
+  @override
+  void onInit() {
+    super.onInit();
+    if (storageController.number.value.isNotEmpty) {
+      mobileNoController.text = storageController.number.value;
+      passwordController.text = storageController.password.value;
+    }
+  }
+
   // Submit login
   Future<void> submit(BuildContext context) async {
     //check the server and network connection
@@ -90,6 +99,31 @@ class LoginController extends GetxController {
         isLoading.value = false;
 
         Get.to(() => DashBoardScreen());
+      } else {
+        Get.snackbar(
+          'Error!!!',
+          'Invalid username or password',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red.shade600,
+          colorText: Colors.white,
+          borderRadius: 15,
+          margin: const EdgeInsets.all(12),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          icon: const Icon(Icons.check_circle, color: Colors.white, size: 30),
+          shouldIconPulse: true,
+          duration: const Duration(seconds: 3),
+          overlayBlur: 0,
+          boxShadows: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 8,
+              offset: const Offset(2, 3),
+            ),
+          ],
+          isDismissible: true,
+          forwardAnimationCurve: Curves.easeOutBack,
+          reverseAnimationCurve: Curves.easeInCubic,
+        );
       }
       isLoading.value = false;
     } else {

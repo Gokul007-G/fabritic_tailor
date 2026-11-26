@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:fabritic/model/user_model.dart';
 import 'package:fabritic/services/api_services.dart';
+import 'package:fabritic/services/services.dart';
 
 class LoginServices {
   final api = ApiServices();
@@ -16,11 +17,10 @@ class LoginServices {
           'password': password,
         }),
       );
-
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.data);
-        // print('${jsonDecode(response.data['status'])}');
-        // final data = response.data;
+        final data = response.data is String
+            ? jsonDecode(response.data)
+            : response.data;
 
         if (data == null) {
           throw Exception('⚠️ No Data Found.');

@@ -29,7 +29,6 @@ class _QrScannerWidgetState extends State<QrScannerWidget> {
         if (!isScanned) {
           isScanned = true;
           widget.onScan("JB-0023");
-          print("✅ Test QR code triggered\n JB-8312");
         }
       });
     }

@@ -12,9 +12,12 @@ class ApiServices {
   // static const imageUrl = "http://10.0.2.2/SRSSilk/";
   // static const baseUrl = "http://10.0.2.2/SRSSilk/mobile_services/";
 
-  static const tailorBaseUrl = '$baseUrl/tailor/';
+  static const tailorBaseUrl = '${baseUrl}tailor/';
 
   final Dio image = Dio(BaseOptions(baseUrl: imageUrl));
   final Dio dio = Dio(BaseOptions(baseUrl: baseUrl));
-  final Dio tailorUrl = Dio(BaseOptions(baseUrl: tailorBaseUrl));
+  final Dio tailorUrl = Dio(
+    BaseOptions(baseUrl: tailorBaseUrl),
+  );
+  // final Dio tailorUrl = Dio(BaseOptions(baseUrl: tailorBaseUrl));
 }

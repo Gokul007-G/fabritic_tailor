@@ -1,7 +1,6 @@
 import 'package:fabritic/controller/storage/storage_controller.dart';
 import 'package:fabritic/controller/tailorcontroller/dashboard_controller.dart';
 import 'package:fabritic/controller/tailorcontroller/view_measurement_controller.dart';
-import 'package:fabritic/services/api_services.dart';
 import 'package:fabritic/theme/app_colors.dart';
 import 'package:fabritic/view/tailor/dashboard_screen.dart';
 import 'package:fabritic/widget/image_slider.dart';
@@ -19,7 +18,6 @@ class ViewMeasurementScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final values = controller.measurement.value;
     final colors = AppColors(context);
-
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -68,8 +66,8 @@ class ViewMeasurementScreen extends StatelessWidget {
                       _buildRow(context, 'Job Order Number', '${values.jbNo}'),
                       _buildRow(
                         context,
-                        'Customer Name',
-                        '${values.customerName}',
+                        'Measurement\ntaken by',
+                        '${values.measurementName}',
                       ),
                       _buildRow(
                         context,
@@ -315,6 +313,46 @@ class ViewMeasurementScreen extends StatelessWidget {
                   ),
                 ),
 
+                //Review
+                if (values.remarks != '' || values.generalRemarks != '') ...[
+                  Container(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    margin: EdgeInsets.symmetric(vertical: 10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(width: 0.5),
+                      boxShadow: [
+                        BoxShadow(
+                          color: colors.white,
+                          blurRadius: 8,
+                          offset: Offset(0, 5),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          "Review",
+                          style: TextStyle(
+                            color: colors.primary,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+
+                        if (values.remarks != '' && values.remarks != null)
+                          _buildRow(context, 'Remarks', '${values.remarks}'),
+                        if (values.generalRemarks != '' &&
+                            values.generalRemarks != null)
+                          _buildRow(
+                            context,
+                            'General Remarks',
+                            '${values.generalRemarks}',
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -364,10 +402,7 @@ class ViewMeasurementScreen extends StatelessWidget {
                         '2',
                       );
                       if (result) {
-                        dashboardController.getOrdersCnt(
-                          storageController.name.value,
-                          storageController.branchId.value,
-                        );
+                        dashboardController.getOrdersCnt();
                         Get.snackbar(
                           "Stitching Updated Successfully",
                           "JOB Number - ${values.jbNo} Completed",

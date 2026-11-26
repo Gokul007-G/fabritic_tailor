@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:fabritic/model/measurement_model.dart';
 import 'package:fabritic/services/api_services.dart';
@@ -6,13 +8,16 @@ class ViewMeasurementServices {
   final api = ApiServices();
 
   //get a measurement By job id
-  Future<Measurement?> viewMeasurementSrc(String jbNo) async {
+  Future<Measurement?> viewMeasurementSrc( String name, String jbNo) async {
+
     final response = await api.tailorUrl.post(
       'view_measurement.php',
-      data: FormData.fromMap({'jbNo': jbNo}),
+      data: FormData.fromMap({'emp_name': name ,'jbNo': jbNo}),
     );
     if (response.statusCode == 200) {
-      final data = response.data;
+      final data = response.data is String
+          ? jsonDecode(response.data)
+          : response.data;
       if (data != null && data != '') {
         if (data['status'] == 'success') {
           return Measurement.fromJson(data['data'][0]);

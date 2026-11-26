@@ -19,182 +19,178 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = AppColors(context);
-    if (storageController.number.value.isNotEmpty) {
-      controller.mobileNoController.text = storageController.number.value;
-      controller.passwordController.text = storageController.password.value;
-    }
+    // if (storageController.number.value.isNotEmpty) {
+    //   controller.mobileNoController.text = storageController.number.value;
+    //   controller.passwordController.text = storageController.password.value;
+    // }
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Form(
             key: controller.loginformkey,
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (!biometricController.isAuthenticated.value)
-                    Card(
-                      margin: EdgeInsets.symmetric(vertical: 30),
-                      child: Image.asset(
-                        'assets/icons/tailorlog.gif',
-                        width: double.infinity,
-                        height: MediaQuery.of(context).size.height * 0.3,
-                      ),
-                    ),
-                  Text(
-                    'LOGIN',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: colors.primary,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (!biometricController.isAuthenticated.value)
+                  Card(
+                    margin: EdgeInsets.symmetric(vertical: 30),
+                    child: Image.asset(
+                      'assets/icons/tailorlog.gif',
+                      width: double.infinity,
+                      height: MediaQuery.of(context).size.height * 0.3,
                     ),
                   ),
-                  const SizedBox(height: 20),
-
-                  //Use the Customer Login
-                  // Obx(
-                  //   () => Row(
-                  //     children: [
-
-                  //       Row(
-                  //         children: [
-                  //           Radio<LoginMethod>(
-                  //             groupValue: controller.selectedMethod.value,
-                  //             activeColor: colors.primary,
-                  //             value: LoginMethod.password,
-                  //             onChanged: (value) =>
-                  //                 controller.changeMethod(value!),
-                  //           ),
-                  //           Text('Password'),
-                  //         ],
-                  //       ),
-                  //       const SizedBox(width: 20),
-                  //       Row(
-                  //         children: [
-                  //           Radio(
-                  //             // title: const Text("OTP"),
-                  //             groupValue: controller.selectedMethod.value,
-                  //             activeColor: colors.primary,
-                  //             value: LoginMethod.otp,
-                  //             onChanged: (value) =>
-                  //                 controller.changeMethod(value!),
-                  //           ),
-                  //           Text('OTP'),
-                  //         ],
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
-                  FormTextfiled(
-                    controller: controller.mobileNoController,
-                    prefixIcon: Icons.person,
-                    labelText: "Mobile Number",
-                    hintText: "Enter Mobile Number",
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Enter Mobile Number";
-                      }
-                      if (value.length == 9) {
-                        return "Please enter the 10 number";
-                      }
-                      return null;
-                    },
+                Text(
+                  'LOGIN',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: colors.primary,
                   ),
+                ),
+                const SizedBox(height: 20),
 
-                  //show password or otp filed
-                  Obx(
-                    () =>
-                        controller.selectedMethod.value == LoginMethod.password
-                        ? Column(
-                            children: [
-                              FormTextfiled(
-                                controller: controller.passwordController,
-                                prefixIcon: controller.visibilityText.value
-                                    ? Icons.lock
-                                    : Icons.lock_open,
-                                suffixIcon: IconButton(
-                                  icon: Icon(
-                                    controller.visibilityText.value
-                                        ? Icons.visibility_off
-                                        : Icons.visibility,
-                                    color: colors.primary,
-                                  ),
+                //Use the Customer Login
+                // Obx(
+                //   () => Row(
+                //     children: [
 
-                                  onPressed:
-                                      controller.togglePasswordVisibility,
+                //       Row(
+                //         children: [
+                //           Radio<LoginMethod>(
+                //             groupValue: controller.selectedMethod.value,
+                //             activeColor: colors.primary,
+                //             value: LoginMethod.password,
+                //             onChanged: (value) =>
+                //                 controller.changeMethod(value!),
+                //           ),
+                //           Text('Password'),
+                //         ],
+                //       ),
+                //       const SizedBox(width: 20),
+                //       Row(
+                //         children: [
+                //           Radio(
+                //             // title: const Text("OTP"),
+                //             groupValue: controller.selectedMethod.value,
+                //             activeColor: colors.primary,
+                //             value: LoginMethod.otp,
+                //             onChanged: (value) =>
+                //                 controller.changeMethod(value!),
+                //           ),
+                //           Text('OTP'),
+                //         ],
+                //       ),
+                //     ],
+                //   ),
+                // ),
+                FormTextfiled(
+                  controller: controller.mobileNoController,
+                  prefixIcon: Icons.person,
+                  labelText: "Mobile Number",
+                  hintText: "Enter Mobile Number",
+                  inputType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Enter Mobile Number";
+                    }
+                    if (value.length == 9) {
+                      return "Please enter the 10 number";
+                    }
+                    return null;
+                  },
+                ),
+
+                //show password or otp filed
+                Obx(
+                  () => controller.selectedMethod.value == LoginMethod.password
+                      ? Column(
+                          children: [
+                            FormTextfiled(
+                              controller: controller.passwordController,
+                              prefixIcon: controller.visibilityText.value
+                                  ? Icons.lock
+                                  : Icons.lock_open,
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  controller.visibilityText.value
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
+                                  color: colors.primary,
                                 ),
-                                obscureText: controller.visibilityText.value,
-                                labelText: 'Password',
-                                hintText: 'Enter Password',
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "Please enter your password";
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ],
-                          )
-                        : Column(
-                            children: [
-                              FormTextfiled(
-                                controller: controller.otpController,
-                                prefixIcon: Icons.output,
-                                inputType: TextInputType.number,
-                                labelText: 'OTP',
-                                hintText: 'Enter OTP Number',
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "Please enter OTP";
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ],
-                          ),
-                  ),
 
-                  Obx(
-                    () =>
-                        controller.selectedMethod.value == LoginMethod.password
-                        ? FormElevatedbutton(
-                            label: controller.isLoading.value
-                                ? 'Logging in...'
-                                : 'Submit',
-                            icon: Icons.outgoing_mail,
-                            onpressed: () {
-                              if (controller.loginformkey.currentState!
-                                  .validate()) {
-                                controller.submit(context);
-                              }
-                            },
-                          )
-                        : FormElevatedbutton(
-                            label: 'Generate OTP',
-                            icon: Icons.outbox_sharp,
-                            onpressed: () {
-                              if (controller.loginformkey.currentState!
-                                  .validate()) {
-                                controller.submit(context);
-                              }
-                            },
-                          ),
-                  ),
-                  const SizedBox(height: 15),
-                  if (storageController.name.value.isNotEmpty)
-                    IconButton(
-                      onPressed: () {
-                        biometricController.authenticate(context);
-                      },
-                      icon: Icon(
-                        Icons.fingerprint,
-                        color: colors.primary,
-                        size: 60,
-                      ),
+                                onPressed: controller.togglePasswordVisibility,
+                              ),
+                              obscureText: controller.visibilityText.value,
+                              labelText: 'Password',
+                              hintText: 'Enter Password',
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return "Please enter your password";
+                                }
+                                return null;
+                              },
+                            ),
+                          ],
+                        )
+                      : Column(
+                          children: [
+                            FormTextfiled(
+                              controller: controller.otpController,
+                              prefixIcon: Icons.output,
+                              inputType: TextInputType.number,
+                              labelText: 'OTP',
+                              hintText: 'Enter OTP Number',
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return "Please enter OTP";
+                                }
+                                return null;
+                              },
+                            ),
+                          ],
+                        ),
+                ),
+
+                Obx(
+                  () => controller.selectedMethod.value == LoginMethod.password
+                      ? FormElevatedbutton(
+                          label: controller.isLoading.value
+                              ? 'Logging in...'
+                              : 'Submit',
+                          icon: Icons.outgoing_mail,
+                          onpressed: () {
+                            if (controller.loginformkey.currentState!
+                                .validate()) {
+                              controller.submit(context);
+                            }
+                          },
+                        )
+                      : FormElevatedbutton(
+                          label: 'Generate OTP',
+                          icon: Icons.outbox_sharp,
+                          onpressed: () {
+                            if (controller.loginformkey.currentState!
+                                .validate()) {
+                              controller.submit(context);
+                            }
+                          },
+                        ),
+                ),
+                const SizedBox(height: 15),
+                if (storageController.name.value.isNotEmpty)
+                  IconButton(
+                    onPressed: () {
+                      biometricController.authenticate(context);
+                    },
+                    icon: Icon(
+                      Icons.fingerprint,
+                      color: colors.primary,
+                      size: 60,
                     ),
-                ],
-              ),
+                  ),
+              ],
             ),
           ),
         ),

@@ -36,58 +36,65 @@ class _ScannerScreenState extends State<ScannerScreen> {
     return Scaffold(
       appBar: AppBar(title: Text('QR Scanner'), centerTitle: true),
       body: Center(
-        child: Container(
-          height: MediaQuery.of(context).size.height * 0.4,
-          width: MediaQuery.of(context).size.width * 0.75,
-          decoration: BoxDecoration(
-            color: Colors.transparent,
-            border: Border.all(width: 2, color: colors.black),
-            borderRadius: BorderRadius.circular(50),
-            boxShadow: [BoxShadow(blurStyle: BlurStyle.outer, blurRadius: 15)],
-          ),
-          child: Padding(
-            padding: const EdgeInsets.only(top: 15),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Scan QR Code',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
-
-                Expanded(
+        child: Obx(
+          () => viewMeasurementController.isLoading.value
+              ? const CircularProgressIndicator()
+              : Container(
+                  height: MediaQuery.of(context).size.height * 0.4,
+                  width: MediaQuery.of(context).size.width * 0.75,
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    border: Border.all(width: 2, color: colors.black),
+                    borderRadius: BorderRadius.circular(50),
+                    boxShadow: [
+                      BoxShadow(blurStyle: BlurStyle.outer, blurRadius: 15),
+                    ],
+                  ),
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: QrScannerWidget(
-                        // testMode: true,
-                        onScan: (code) async {
-                          await viewMeasurementController.viewMeasurementCnt(
-                            context,
-                            code,
-                          );
-                        },
-                      ),
+                    padding: const EdgeInsets.only(top: 15),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Scan QR Code',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
+
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: QrScannerWidget(
+                                // testMode: true,
+                                onScan: (code) async {
+                                  await viewMeasurementController
+                                      .viewMeasurementCnt(context, code);
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Get.back();
+                          },
+                          child: Text(
+                            'Cancel',
+                            style: TextStyle(
+                              color: colors.error,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-                TextButton(
-                  onPressed: () {
-                    Get.back();
-                  },
-                  child: Text(
-                    'Cancel',
-                    style: TextStyle(
-                      color: colors.error,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
         ),
       ),
     );

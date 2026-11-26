@@ -105,8 +105,8 @@ class Measurement {
       deliveryDate: json['delivery_date'] != null
           ? DateTime.tryParse(json['delivery_date'])
           : null,
-      remarks: json['remarks'],
-      generalRemarks: json['general_remarks'],
+      remarks: json['remarks'] ?? null,
+      generalRemarks: json['general_remarks'] ?? null,
       image: json['image'],
       blouseWaist: (json['blouse_waist'] != null)
           ? double.tryParse(json['blouse_waist'].toString())

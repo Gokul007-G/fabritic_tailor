@@ -22,7 +22,7 @@ class BiometricController extends GetxController {
 
       if (!canCheck || !supported) {
         message.value = 'Biometric not available';
-        Get.to(() => LoginPage());
+        Get.back();
         return;
       }
 
@@ -35,7 +35,12 @@ class BiometricController extends GetxController {
       );
 
       if (result) {
+        loginController.mobileNoController.text =
+            storageController.number.value;
+        loginController.passwordController.text =
+            storageController.password.value;
         loginController.submit(context);
+
         isAuthenticated.value = true;
       } else {
         message.value = 'failed';
